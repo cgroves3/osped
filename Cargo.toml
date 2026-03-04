@@ -1,0 +1,32 @@
+[package]
+name = "osped"
+version = "0.1.0"
+edition = "2021"
+description = "Production-ready single-robot IPC and coordinate frame tracking using iceoryx2 and sguaba"
+
+[dependencies]
+iceoryx2 = "0.5"
+iceoryx2-bb-log = "0.5"
+sguaba = { version = "0.9", features = ["serde"] }
+nalgebra = "0.34"
+uom = "0.37"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+
+[[example]]
+name = "motor_controller"
+path = "examples/motor_controller.rs"
+
+[[example]]
+name = "sensor_publisher"
+path = "examples/sensor_publisher.rs"
+
+[[example]]
+name = "transform_monitor"
+path = "examples/transform_monitor.rs"
+
+[[example]]
+name = "frame_tree_demo"
+path = "examples/frame_tree_demo.rs"
