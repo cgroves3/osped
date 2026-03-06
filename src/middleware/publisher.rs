@@ -33,7 +33,7 @@ impl<T: Debug + Default + Copy + Sized + Send + 'static> Publisher<T> {
         let sample = self.inner.loan_uninit().map_err(|e| IpcError::LoanFailed {
             name: self.topic.clone(), detail: format!("{e:?}"),
         })?;
-        let sample = sample.write_payload(T::default());
+        let mut sample = sample.write_payload(T::default());
         let seq = self.seq;
         fill(sample.payload_mut());
         self.seq += 1;

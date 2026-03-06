@@ -349,16 +349,21 @@ impl TransformTree {
         To: sguaba::CoordinateSystem,
     {
         let iso = self.lookup_transform(source_frame, target_frame, time_ns)?;
-        let translation = sguaba::Coordinate::<To>::from_raw(
-            iso.translation.x, iso.translation.y, iso.translation.z,
+        use uom::si::f64::Length;
+        use uom::si::length::meter;
+        #[allow(deprecated)]
+        let translation = sguaba::Vector::<From>::from_cartesian(
+            Length::new::<meter>(iso.translation.x),
+            Length::new::<meter>(iso.translation.y),
+            Length::new::<meter>(iso.translation.z),
         );
-        let rotation = sguaba::math::Rotation::<From, To>::from_raw_quaternion(
+        let rotation = unsafe { sguaba::math::Rotation::<From, To>::from_quaternion(
+            iso.rotation.quaternion().w,
             iso.rotation.quaternion().i,
             iso.rotation.quaternion().j,
             iso.rotation.quaternion().k,
-            iso.rotation.quaternion().w,
-        );
-        Ok(sguaba::math::RigidBodyTransform::new(translation, rotation))
+        ) };
+        Ok(unsafe { sguaba::math::RigidBodyTransform::new(translation, rotation) })
     }
 
     /// List all known frame names.
