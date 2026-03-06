@@ -45,13 +45,13 @@ impl NodeHandle {
         Ok(Self { node, node_name: name.into() })
     }
 
-    pub fn advertise<T: std::fmt::Debug + Default + Copy + Sized + Send + 'static>(
+    pub fn advertise<T: std::fmt::Debug + Default + Copy + Sized + Send + ZeroCopySend + 'static>(
         &self, topic: &str,
     ) -> Result<Publisher<T>, IpcError> {
         Publisher::new(&self.node, &self.node_name, topic)
     }
 
-    pub fn subscribe<T: std::fmt::Debug + Default + Copy + Sized + Send + 'static>(
+    pub fn subscribe<T: std::fmt::Debug + Default + Copy + Sized + Send + ZeroCopySend + 'static>(
         &self, topic: &str,
     ) -> Result<Subscriber<T>, IpcError> {
         Subscriber::new(&self.node, &self.node_name, topic)

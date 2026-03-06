@@ -5,8 +5,8 @@ edition = "2021"
 description = "Production-ready single-robot IPC and coordinate frame tracking using iceoryx2 and sguaba"
 
 [dependencies]
-iceoryx2 = "0.5"
-iceoryx2-bb-log = "0.5"
+iceoryx2 = "0.8.1"
+iceoryx2-bb-log = "0.7"
 sguaba = { version = "0.9", features = ["serde"] }
 nalgebra = "0.34"
 uom = "0.37"

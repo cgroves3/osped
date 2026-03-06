@@ -4,13 +4,13 @@ use std::fmt::Debug;
 use iceoryx2::prelude::*;
 use super::{IpcError, monotonic_now_ns};
 
-pub struct Publisher<T: Debug + Default + Copy + Sized + Send + 'static> {
+pub struct Publisher<T: Debug + Default + Copy + Sized + Send + ZeroCopySend + 'static> {
     inner: iceoryx2::port::publisher::Publisher<ipc::Service, T, ()>,
     topic: String,
     seq: u64,
 }
 
-impl<T: Debug + Default + Copy + Sized + Send + 'static> Publisher<T> {
+impl<T: Debug + Default + Copy + Sized + Send + ZeroCopySend + 'static> Publisher<T> {
     pub(crate) fn new(
         node: &Node<ipc::Service>, node_name: &str, topic: &str,
     ) -> Result<Self, IpcError> {

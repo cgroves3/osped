@@ -4,12 +4,12 @@ use std::fmt::Debug;
 use iceoryx2::prelude::*;
 use super::IpcError;
 
-pub struct Subscriber<T: Debug + Default + Copy + Sized + Send + 'static> {
+pub struct Subscriber<T: Debug + Default + Copy + Sized + Send + ZeroCopySend + 'static> {
     inner: iceoryx2::port::subscriber::Subscriber<ipc::Service, T, ()>,
     topic: String,
 }
 
-impl<T: Debug + Default + Copy + Sized + Send + 'static> Subscriber<T> {
+impl<T: Debug + Default + Copy + Sized + Send + ZeroCopySend + 'static> Subscriber<T> {
     pub(crate) fn new(
         node: &Node<ipc::Service>, node_name: &str, topic: &str,
     ) -> Result<Self, IpcError> {
