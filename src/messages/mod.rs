@@ -3,9 +3,11 @@
 // All message types must be `#[repr(C)]` and implement `Copy` for iceoryx2
 // zero-copy shared-memory transport. No heap allocations allowed in these types.
 
+use iceoryx2::prelude::ZeroCopySend;
+
 /// Fixed-size string for use in shared memory messages.
 #[repr(C)]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, ZeroCopySend)]
 pub struct FixedString<const N: usize> {
     buf: [u8; N],
     len: u16,
@@ -35,7 +37,7 @@ impl<const N: usize> Default for FixedString<N> {
 
 /// Common header — every message carries its coordinate frame and timestamp.
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct Header {
     pub timestamp_ns: u64,
     pub seq: u64,
@@ -45,7 +47,7 @@ pub struct Header {
 // ── Sensor messages ──────────────────────────────────────────────────────────
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct Imu {
     pub header: Header,
     pub linear_acceleration: [f64; 3],
@@ -54,7 +56,7 @@ pub struct Imu {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, ZeroCopySend)]
 pub struct LaserScan {
     pub header: Header,
     pub angle_min: f32,
@@ -83,7 +85,7 @@ impl Default for LaserScan {
 // ── Geometry / transform messages ────────────────────────────────────────────
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct Vector3 {
     pub x: f64,
     pub y: f64,
@@ -91,7 +93,7 @@ pub struct Vector3 {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, ZeroCopySend)]
 pub struct Quaternion {
     pub x: f64,
     pub y: f64,
@@ -108,7 +110,7 @@ impl Default for Quaternion {
 /// Rigid-body transform between two coordinate frames (analogous to tf's `TransformStamped`).
 /// This is the IPC wire format; see `transforms::TransformTree` for the runtime tree.
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct TransformStamped {
     pub header: Header,
     pub child_frame_id: FixedString<64>,
@@ -119,7 +121,7 @@ pub struct TransformStamped {
 // ── Actuation messages ───────────────────────────────────────────────────────
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct Twist {
     pub header: Header,
     pub linear: Vector3,
@@ -127,7 +129,7 @@ pub struct Twist {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct JointCommand {
     pub header: Header,
     pub position: f64,
@@ -136,7 +138,7 @@ pub struct JointCommand {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, ZeroCopySend)]
 pub struct JointState {
     pub header: Header,
     pub position: f64,
